@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    
+    <script>
+        const miArray=[1,2,3,4,5];
+
+        //PARA ALMACENAR
+        localStorage.setItem("dato",miArray);//Variable y valor a almacenar
+
+
+        //PARA TRAER DAROS
+        let datoAlmacenado=localStorage.getItem("dato");
+        document.write(datoAlmacenado);
+
+        console.log(typeof(datoAlmacenado))//Lo almacenado es de tipo string, auqnue sea un array, un objeto, etc. Si es objeto, se accede a la propiedad con un .
+
+
+
+
+        const datos=[
+            {id:1, nombre:"Juan",edad:25},
+            {id:2, nombre:"Juan",edad:25},
+            {id:3, nombre:"Juan",edad:25}
+        ]
+
+        localStorage.setItem("datos",datos);//Los datos no se ven porqeu el oredador no tiene manera de acceder a cada array del objeto
+
+        //1. CONVERTIR EN STRING JSON.stringify
+        localStorage.setItem("datos",JSON.stringify(datos));
+
+        //Para traer los datos hago un parse para pasarlos a objeto de nuevo, sin parsear nos saldrían los datos, pero en formato string
+        let datosAlmacenados=JSON.parse(localStorage.getItem("datos"));
+        console.log(datosAlmacenados);
+
+        //Ya se puede acceder a los datos, hacer un foreach,
+
+
+
+        
+    </script>
+</body>
+</html>

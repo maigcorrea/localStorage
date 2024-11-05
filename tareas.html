@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            font-family: "system-ui";
+            margin: 0;
+            padding: 0;
+        }
+
+        /* CREACIÓNDE VARIABLES EN CSS */
+        :root{
+            --morado:rgb(93,0,253);
+            --moradoClaro:rgb(197, 167, 248);
+            --naranja:orange
+        }
+
+        div{
+            display: flex;
+            width: 60%;
+            border: solid 1px var(--morado);
+            padding: 50px;
+            margin: auto;
+            gap: 50px;
+            justify-content: center;  
+            /* flex-direction: row;
+            flex-wrap: nowrap; */
+            flex-flow: wrap;
+        }
+
+        button{
+                background-color: var(--morado);
+                border:none;
+                padding: 20px 30px;
+                color: white;
+                flex: 1;
+                cursor: pointer;
+            }
+        
+        input{
+            border: solid 1px var(--morado);
+            padding: 10px 20px;
+            flex: 1;
+            font-size: 1.2rem;
+            outline: none;
+        }
+
+        input:focus{
+            border: solid 1px var(--moradoClaro);
+            
+        }
+
+        ul{
+            min-width: 100%;
+            list-style: none;
+        }
+
+        li{
+            margin: 20px 0;
+            padding: 20px 0;
+            border-bottom: solid 1px var(--morado);
+        }
+    </style>
+</head>
+<body>
+    <div class="tareas">
+        <input type="text" placeholder="Añadir tarea">
+        <button>Agregar tarea</button>
+        <!-- Crear de forma dinámica -->
+        <!-- <ul>
+            <li>t1</li>
+            <li>t2</li>
+        </ul> -->
+    </div>
+
+
+
+    <script>
+        //CONST Y VAR
+        let tareaInput=document.querySelector("input");
+        const boton=document.querySelector("button");
+        //Para crear de forma dinámica la lista (Los li van a ser los dinámicos, ul se crea desde js)
+        const ul=document.createElement("ul");//Crear ul ç
+        
+        boton.parentElement.append(ul);//Se llama al padre del boton, el div, con parent eñement, asi no hace falta almacenaro seleccionar el div
+
+        const tasks=[];//Aquí se almacena las tareas, si esta vacio, no se pinta nada
+        
+        //FUNCIONES
+        function anadirTareas(tarea){
+            tasks.forEach(task => {
+                const li=document.createElement("li");
+                li.textContent=task.tarea;
+                ul.append(li);
+                //Limpieza del input cuando le damos al click y añadimos la tarea
+                tareaInput.value="";
+                tareaInput.focus();
+            });
+        };
+        
+
+        function almacenarTareas(tareas){
+            //LLamar al set en local storage
+            localStorage.setItem("datos",JSON.stringify(tareas));
+            console.log("tarea insertada");
+
+        };
+
+
+        function mostrarTareas(tareas){
+            //Get de localStorage
+            let datosAlmacenados=JSON.parse(localStorage.getItem(tareas)) || []; //Si hay datos, te los muestra, si no hay nada, se queda vacio
+            console.log("mostrar tarea");
+        }
+
+        // document.addEventListener("DOMContentLoaded",()=>{
+        //     boton.addEventListener("click",()=>{
+        //         //Cada vez que hacemos un click, se almacena el valor de tarea
+        //         let tarea=tareaInput.value.trim()!= "" ? tareaInput.value: false;//Si la tarea está vacia, el valor pasa a ser false
+
+        //         if(tarea){ //Si tarea no es false
+        //             const li=document.createElement(li);
+        //             li.textContent=tarea;
+        //             ul.append(li);
+                    
+        //             //Limpieza del input cuando le damos al click y añadimos la tarea
+        //             tareaInput.value="";
+        //             tareainput.focus();
+
+        //             //Si recargamos la página ya no hay tareas, ahy que mantenerlas, vamos a hacerlo en FUNCIONES
+
+        //         }
+
+        //     })
+        // })
+
+        document.addEventListener("DOMContentLoaded",()=>{
+            boton.addEventListener("click",()=>{
+                //Cada vez que hacemos un click, se almacena el valor de tarea
+                let tarea=tareaInput.value.trim()!= "" ? tareaInput.value: false;//Si la tarea está vacia, el valor pasa a ser false
+
+                if(tarea){ //Si tarea no es false
+                    tasks.push(tarea);
+                    anadirTareas(tasks);
+                    almacenarTareas(tasks);
+                    mostrarTareas(tasks);
+
+                }
+
+            })
+        })
+    </script>
+</body>
+</html>
