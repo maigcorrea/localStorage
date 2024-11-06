@@ -94,7 +94,8 @@
         
         boton.parentElement.append(ul);//Se llama al padre del boton, el div, con parent eñement, asi no hace falta almacenaro seleccionar el div
 
-        const tasks=JSON.parse(localStorage.getItem("datos")) || [];//Aquí se almacena las tareas, si esta vacio, no se pinta nada, datos es la variable que se pilla del local storage (punto 2.2)
+        let tasks=JSON.parse(localStorage.getItem("datos")) || [];//Aquí se almacena las tareas, si esta vacio, no se pinta nada, datos es la variable que se pilla del local storage (punto 2.2)
+        //Como es const, no cambia, para que cambie hay que refrescar la página
         // tasks=["t1","t2","t3"];
         
         //FUNCIONES
@@ -146,6 +147,7 @@
         //3.1 FUNCION LIMPIAR TODAS TAREAS
         function limpiarTareasAll(){
             localStorage.clear();
+            tasks=[];
             mostrarTareas();
         }
 
