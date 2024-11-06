@@ -92,7 +92,7 @@
         //Para crear de forma dinámica la lista (Los li van a ser los dinámicos, ul se crea desde js)
         const ul=document.createElement("ul");//Crear ul ç
         
-        boton.parentElement.append(ul);//Se llama al padre del boton, el div, con parent eñement, asi no hace falta almacenaro seleccionar el div
+        boton[0].parentElement.append(ul);//Se llama al padre del boton, el div, con parent eñement, asi no hace falta almacenaro seleccionar el div
 
         let tasks=JSON.parse(localStorage.getItem("datos")) || [];//Aquí se almacena las tareas, si esta vacio, no se pinta nada, datos es la variable que se pilla del local storage (punto 2.2)
         //Como es const, no cambia, para que cambie hay que refrescar la página
@@ -194,6 +194,10 @@
                 agregarTarea();
                 
 
+            //CLICKAR AL OTRO BOTON PARA LIMPIAR TODAS LAS TAREAS
+            boton[1].addEventListener("click",()=>{
+                limpiarTareasAll();
+            })
 
 
 
