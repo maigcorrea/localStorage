@@ -39,6 +39,10 @@
                 flex: 1;
                 cursor: pointer;
             }
+
+        button+button{
+            background-color: var(--naranja);
+        }
         
         input{
             border: solid 1px var(--morado);
@@ -69,6 +73,9 @@
     <div class="tareas">
         <input type="text" placeholder="Añadir tarea">
         <button>Agregar tarea</button>
+        <button>Limpiar tarea</button> 
+
+
         <!-- Crear de forma dinámica -->
         <!-- <ul>
             <li>t1</li>
@@ -81,40 +88,68 @@
     <script>
         //CONST Y VAR
         let tareaInput=document.querySelector("input");
-        const boton=document.querySelector("button");
+        const boton=document.querySelectorAll("button"); //Se seleccionan todos los botones
         //Para crear de forma dinámica la lista (Los li van a ser los dinámicos, ul se crea desde js)
         const ul=document.createElement("ul");//Crear ul ç
         
         boton.parentElement.append(ul);//Se llama al padre del boton, el div, con parent eñement, asi no hace falta almacenaro seleccionar el div
 
-        const tasks=[];//Aquí se almacena las tareas, si esta vacio, no se pinta nada
+        const tasks=JSON.parse(localStorage.getItem("datos")) || [];//Aquí se almacena las tareas, si esta vacio, no se pinta nada, datos es la variable que se pilla del local storage (punto 2.2)
+        // tasks=["t1","t2","t3"];
         
         //FUNCIONES
-        function anadirTareas(tarea){
-            tasks.forEach(task => {
-                const li=document.createElement("li");
-                li.textContent=task.tarea;
-                ul.append(li);
-                //Limpieza del input cuando le damos al click y añadimos la tarea
-                tareaInput.value="";
-                tareaInput.focus();
-            });
+        //1. mostrar datos si es que hay
+        function mostrarTareas(){
+            limpiar();//2.7 limpieza de la ul. Antes de agregar se elimina lo que haya en la uñ, y se vuelve a agregar todo de nuevo, también se limpia el input y se hace un focus en él. Quita lo que hay ahí y inserta los datos otra vez
+            if(tasks.length >0){
+                boton[0].parentElement.append(ul);//Insertar ul
+                console.log("hay datos");
+                tasks.forEach(tarea => {
+                    const li=document.createElement("li");
+                    li.textContent=tarea;
+                    //2.5 Antes de hacer un append hay que limpiar para que no salgan duplicados
+                    ul.append(li);
+                });
+            }
+        }
+
+        //2
+        function agregarTarea(){
+            let tarea=tareaInput.value.trim();
+            //Se agrega la tarea si hay datos
+            if(tarea!= ""){
+                tasks.push(tarea);
+                almacenarLocal(); //2.4 Se almacena en local storage
+                mostrarTareas(); //Se muestra la tarea
+            }
+
         };
         
 
-        function almacenarTareas(tareas){
+        //2.2 Almacenar en local storage
+        function almacenarLocal(){
             //LLamar al set en local storage
-            localStorage.setItem("datos",JSON.stringify(tareas));
+            localStorage.setItem("datos",JSON.stringify(tasks));
             console.log("tarea insertada");
 
         };
 
 
-        function mostrarTareas(tareas){
-            //Get de localStorage
-            let datosAlmacenados=JSON.parse(localStorage.getItem(tareas)) || []; //Si hay datos, te los muestra, si no hay nada, se queda vacio
-            console.log("mostrar tarea");
+        //2.6 Funcion de limpieza
+        function limpiar(){
+            tareaInput.value="";//Se limpia el input
+            ul.innerHTML="";//Se limpia la ul para que al darle al click no salgan duplicados
+            tareaInput.focus();
         }
+
+
+        //3.1 FUNCION LIMPIAR TODAS TAREAS
+        function limpiarTareasAll(){
+            localStorage.clear();
+            mostrarTareas();
+        }
+
+
 
         // document.addEventListener("DOMContentLoaded",()=>{
         //     boton.addEventListener("click",()=>{
@@ -138,17 +173,27 @@
         // })
 
         document.addEventListener("DOMContentLoaded",()=>{
-            boton.addEventListener("click",()=>{
-                //Cada vez que hacemos un click, se almacena el valor de tarea
-                let tarea=tareaInput.value.trim()!= "" ? tareaInput.value: false;//Si la tarea está vacia, el valor pasa a ser false
+            //1.1 De primeras se crea la lista que almacenará las tareas si hay ya tareas almacenadas
+            mostrarTareas();
+            
+            boton[0].addEventListener("click",()=>{
+                // //Cada vez que hacemos un click, se almacena el valor de tarea
+                // let tarea=tareaInput.value.trim()!= "" ? tareaInput.value: false;//Si la tarea está vacia, el valor pasa a ser false
 
-                if(tarea){ //Si tarea no es false
-                    tasks.push(tarea);
-                    anadirTareas(tasks);
-                    almacenarTareas(tasks);
-                    mostrarTareas(tasks);
+                // if(tarea){ //Si tarea no es false
+                //     tasks.push(tarea);
+                //     anadirTareas(tasks);
+                //     almacenarTareas(tasks);
+                //     mostrarTareas(tasks);
 
-                }
+                // }
+
+                //2.1 Al hacer click se agrega la tarea
+                agregarTarea();
+                
+
+
+
 
             })
         })
